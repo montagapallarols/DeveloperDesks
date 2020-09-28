@@ -1,5 +1,15 @@
 export const desksDummyData = [
   {
+    id: 10,
+    uri:
+      "https://res.cloudinary.com/daxjf54p3/image/upload/v1601306412/hmvcvmdpj3dqgca4vtqk.jpg",
+    developer: {
+      id: 11,
+      name: "Michiel",
+      email: "michiel@codaisseur.com",
+    },
+  },
+  {
     id: 4,
     uri:
       "https://res.cloudinary.com/daxjf54p3/image/upload/v1601299132/pgzw8qoegk56qbnpatac.jpg",
