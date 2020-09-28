@@ -9,3 +9,10 @@ Elevator pitch: developers are social creatures first and foremost, and want to 
 Possible enhancements:
 
 - geolocating pictures, and searching by map / location
+
+## Data model
+
+- Developers (id, name, email, ...)
+- Their desks (id, uri, developer, ...)
+- Comments (id, text, posterId, deskId, ...)
+- ...and more?

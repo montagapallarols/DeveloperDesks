@@ -8,5 +8,9 @@ Gist:
 
 Technologies:
 
-- workshop technologies: TypeScript, React Native (incl. react-navigation);
-- seen before: Redux
+- workshop technologies included: TypeScript, React Native (incl. react-navigation), Context, custom/other hooks;
+
+## Docs
+
+- [App](./docs/app.md)
+- [Setup](./docs/setup.md)
