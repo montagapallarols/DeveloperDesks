@@ -15,3 +15,11 @@ For more info:
 ## Getting started
 
 Getting up and running with this project should be as simple as `npm install` and `npm start`.
+
+## Cloudinary
+
+We need a place to upload images. For this project, we've chosen to go with [Cloudinary](https://cloudinary.com/)—for the simple reason that it has a free option that doesn't require a credit card :)
+
+To test the app more thoroughly, you might need to make a new Cloudinary account. Once you've made one, you will want to create a new **Upload Preset** with "Unsigned" signing method. Here's an example tutorial that walks you through these steps (including the React Native part, btw):
+
+- https://dev.to/godswillokokon/react-native-how-to-upload-an-image-to-cloudinary-4okg
