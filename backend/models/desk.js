@@ -9,11 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       desk.belongsTo(models.developer);
+      desk.hasMany(models.comment);
     }
   }
   desk.init(
     {
-      imageUrl: DataTypes.STRING,
+      uri: DataTypes.STRING,
       developerId: DataTypes.INTEGER,
       title: DataTypes.STRING,
       lat: DataTypes.STRING,

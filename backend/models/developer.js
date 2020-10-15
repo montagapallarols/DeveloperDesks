@@ -1,8 +1,5 @@
 "use strict";
-
-import { Model, ModelStatic, Sequelize, DataTypeAbstract } from "sequelize";
-import { Models, DataTypesTypes } from "./types";
-
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class developer extends Model {
     /**
@@ -19,8 +16,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       email: DataTypes.STRING,
       password: DataTypes.STRING,
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
+      fullName: DataTypes.STRING,
     },
     {
       sequelize,
