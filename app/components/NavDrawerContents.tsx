@@ -1,14 +1,16 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
 import { theme, Button } from "app/ui";
 import { DeskSvg } from "app/ui/DeskSvg";
 import { useAppState } from "app/lib/appstate";
+import { enableExpoCliLogging } from "expo/build/logs/Logs";
 
 export function NavDrawerContents() {
   const insets = useSafeAreaInsets();
-
+  const navigaton = useNavigation();
   const { auth } = useAppState();
 
   return (
@@ -19,7 +21,10 @@ export function NavDrawerContents() {
       ]}
     >
       {auth ? (
-        <View />
+        <>
+          <View style={{ flex: 1.2 }} />
+          <Text style={styles.teaserText}>Welcome {auth.name}!</Text>
+        </>
       ) : (
         <>
           <View style={{ flex: 1.2 }} />
@@ -27,7 +32,12 @@ export function NavDrawerContents() {
             You're not logged in. Log in to post your own desk and share likes
             &amp; comments!
           </Text>
-          <Button text="Log in or register" />
+          <Button
+            text='Log in or register'
+            onPress={() => {
+              navigaton.navigate("Login");
+            }}
+          />
         </>
       )}
       <View style={{ flex: 1 }} />

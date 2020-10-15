@@ -8,16 +8,17 @@ import {
 import { HomeScreen } from "app/screens/HomeScreen";
 import { AddDeskScreen } from "app/screens/AddDeskScreen";
 import { DeskScreen } from "app/screens/DeskScreen";
+import { LoginOrSignupScreen } from "app/screens/LoginOrSignupScreen";
 
 const RootStack = createStackNavigator();
 
 export function NavigationRoot() {
   return (
     <NavigationContainer>
-      <RootStack.Navigator mode="modal" screenOptions={{ headerShown: false }}>
-        <RootStack.Screen name="Main" component={MainStackScreen} />
+      <RootStack.Navigator mode='modal' screenOptions={{ headerShown: false }}>
+        <RootStack.Screen name='Main' component={MainStackScreen} />
         <MainStack.Screen
-          name="AddDesk"
+          name='AddDesk'
           component={AddDeskScreen}
           options={{
             ...TransitionPresets.ScaleFromCenterAndroid,
@@ -35,12 +36,13 @@ const MainStack = createStackNavigator();
 function MainStackScreen() {
   return (
     <MainStack.Navigator screenOptions={{ headerShown: false }}>
-      <MainStack.Screen name="Home" component={HomeScreen} />
+      <MainStack.Screen name='Home' component={HomeScreen} />
       <MainStack.Screen
-        name="Desk"
+        name='Desk'
         component={DeskScreen}
         options={TransitionPresets.ScaleFromCenterAndroid}
       />
+      <MainStack.Screen name='Login' component={LoginOrSignupScreen} />
     </MainStack.Navigator>
   );
 }

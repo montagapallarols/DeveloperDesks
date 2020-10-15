@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import DrawerLayout from "react-native-gesture-handler/DrawerLayout";
@@ -11,14 +11,18 @@ import { NavDrawerContents } from "app/components/NavDrawerContents";
 import { AddDeskFabButton } from "app/components/AddDeskFabButton";
 import { DesksList } from "app/components/DesksList";
 
+import { useAppState, useSetAppState } from "../lib/appstate";
+
 export function HomeScreen() {
   const insets = useSafeAreaInsets();
+  const setState = useSetAppState();
+  const appState = useAppState();
 
   const drawer = useRef<DrawerLayout>(null);
   const openDrawer = useCallback(() => {
     drawer.current?.openDrawer();
   }, []);
-
+  console.log(appState);
   return (
     <View
       style={{
@@ -29,8 +33,8 @@ export function HomeScreen() {
       <DrawerLayout
         ref={drawer}
         drawerWidth={Dimensions.get("window").width - 100}
-        drawerPosition="left"
-        drawerType="slide"
+        drawerPosition='left'
+        drawerType='slide'
         renderNavigationView={() => <NavDrawerContents />}
       >
         <View
@@ -48,7 +52,7 @@ export function HomeScreen() {
           </View>
           <DesksList />
           <View style={styles.placeFabButton}>
-            <AddDeskFabButton />
+            <AddDeskFabButton openDrawer={openDrawer} />
           </View>
         </View>
       </DrawerLayout>
