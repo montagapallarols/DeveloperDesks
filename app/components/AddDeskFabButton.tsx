@@ -5,17 +5,22 @@ import { transparentize } from "polished";
 
 import { shadow, theme, PlusIcon } from "app/ui";
 
-export function AddDeskFabButton() {
-  const navigation = useNavigation();
+type Props = {
+  openDrawer: () => void;
+};
 
+export function AddDeskFabButton(props: Props) {
+  const navigation = useNavigation();
+  console.log(props);
   return (
     <Pressable
       style={styles.container}
       onPress={() => {
-        navigation.navigate("AddDesk");
+        // navigation.navigate("AddDesk");
+        props.openDrawer();
       }}
     >
-      <PlusIcon width={36} height={36} color="white" />
+      <PlusIcon width={36} height={36} color='white' />
       <View style={styles.border}></View>
     </Pressable>
   );

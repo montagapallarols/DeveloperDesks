@@ -1,17 +1,14 @@
 import React from "react";
 import { Pressable, View, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
 import { shadow, theme } from "app/ui";
 import { mix } from "polished";
 
 export function SearchBar() {
-  const navigation = useNavigation();
-
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate("");
+        console.log("search not implemented :)");
       }}
     >
       <View style={styles.container} />

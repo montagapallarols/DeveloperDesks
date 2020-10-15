@@ -31,7 +31,7 @@ export function DeskScreen() {
     return (
       <View style={styles.screen}>
         <View style={{ flex: 1 }} />
-        <ActivityIndicator size="large" color={theme.colors.orange} />
+        <ActivityIndicator size='large' color={theme.colors.orange} />
         <View style={{ flex: 1.6 }} />
       </View>
     );
