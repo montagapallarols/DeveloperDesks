@@ -22,7 +22,7 @@ router.post("/login", async (req, res, next) => {
 
     const token = toJWT({ userId: user.id });
 
-    res.send({ token, email: user.email, name: user.fullName });
+    res.send({ token, email: user.email, name: user.name });
   } catch (e) {
     next(e);
   }
@@ -37,13 +37,13 @@ router.post("/signup", async (req, res, next) => {
     const hash = bcrypt.hashSync(password, 10);
     const user = await Developer.create({
       email,
-      fullName: name,
+      name,
       password: hash,
     });
 
     const token = toJWT({ userId: user.id });
 
-    res.send({ token, email: user.email, name: user.fullName });
+    res.send({ token, email: user.email, name: user.name });
   } catch (e) {
     next(e);
   }
