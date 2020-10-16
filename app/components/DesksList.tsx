@@ -8,6 +8,7 @@ import {
   Dimensions,
   Pressable,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { usePaginatedQuery } from "react-query";
 import { useNavigation } from "@react-navigation/native";
@@ -31,26 +32,30 @@ export function DesksList() {
     },
   });
 
+  if (error) {
+    Alert.alert(`${error}`);
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.filters}>
         <View style={{ marginRight: 8 }}>
           <Pill
-            text="Newest"
+            text='Newest'
             selected={filter === 0}
             onPress={() => setFilter(0)}
           />
         </View>
         <View style={{ marginRight: 8 }}>
           <Pill
-            text="Trending"
+            text='Trending'
             selected={filter === 1}
             onPress={() => setFilter(1)}
           />
         </View>
         <View style={{ marginRight: 8 }}>
           <Pill
-            text="Near me"
+            text='Near me'
             selected={filter === 2}
             onPress={() => setFilter(2)}
           />
@@ -61,7 +66,7 @@ export function DesksList() {
           <RefreshControl refreshing={isFetching} onRefresh={refetch} />
         }
         data={list?.results}
-        keyExtractor={(desk) => `${desk.id}`}
+        keyExtractor={desk => `${desk.id}`}
         renderItem={({ item: desk }) => <DeskItem desk={desk} />}
       />
     </View>

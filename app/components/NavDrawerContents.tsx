@@ -6,7 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 import { theme, Button } from "app/ui";
 import { DeskSvg } from "app/ui/DeskSvg";
 import { useAppState } from "app/lib/appstate";
-import { enableExpoCliLogging } from "expo/build/logs/Logs";
 
 export function NavDrawerContents() {
   const insets = useSafeAreaInsets();
@@ -22,8 +21,7 @@ export function NavDrawerContents() {
     >
       {auth ? (
         <>
-          <View style={{ flex: 1.2 }} />
-          <Text style={styles.teaserText}>Welcome {auth.name}!</Text>
+          <Text style={styles.loggedInText}>Welcome {auth.name}!</Text>
         </>
       ) : (
         <>
@@ -58,6 +56,11 @@ const styles = StyleSheet.create({
     lineHeight: 1.35 * 16,
     color: theme.colors.brown4,
     marginBottom: 16,
+  },
+  loggedInText: {
+    fontSize: 24,
+    color: theme.colors.brown4,
+    marginTop: 16,
   },
   deskAtBottom: {
     alignItems: "center",

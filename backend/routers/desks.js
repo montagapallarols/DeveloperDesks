@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const { desk: Desk, developer: Developer } = require("../models");
+const authMiddleware = require("../auth/middleware");
 
 const router = Router();
 
@@ -8,7 +9,7 @@ router.get("/", async (req, res, next) => {
     const desks = await Desk.findAndCountAll({
       include: [{ model: Developer, attributes: ["id", "name", "email"] }],
     });
-    console.log(desks.rows);
+
     res.json({ total: desks.count, results: desks.rows });
   } catch (e) {
     next(e);
@@ -24,8 +25,24 @@ router.get("/:id", async (req, res, next) => {
     if (!desk) {
       return res.status(404).send("Desk not found");
     }
-    console.log(desk);
+
     res.json(desk);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/", authMiddleware, async (req, res, next) => {
+  try {
+    const {
+      user,
+      body: { uri, title },
+    } = req;
+    if (!uri || !title) {
+      return res.status(400).send("Missing parameters");
+    }
+    await Desk.create({ uri, title, developerId: user.id });
+    res.send({ status: "Desk Created!" });
   } catch (e) {
     next(e);
   }

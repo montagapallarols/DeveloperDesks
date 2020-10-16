@@ -1,8 +1,8 @@
 import React from "react";
-import { desksDummyData } from "./dummyData";
+import { AppState } from "react-native";
 import { ReactQueryConfigProvider } from "react-query";
+import { useAppState } from "./appstate";
 import axios from "./axios";
-import { useSetAppState } from "./appstate";
 
 export type DeskResult = {
   id: number;
@@ -26,26 +26,38 @@ export type SignupResult = {
   email: string;
   token: string;
 };
+export type PostDeskResult = {
+  status: string;
+};
+
+// These API call functions do not require try/catch because they are used with
+// the useAsyncCallback hook in the /api/ folder. This hook catches exceptions from
+// axios directly. So no need to catch exceptions and handle them.
 
 export async function fetchDesksList(): Promise<DesksListResult> {
-  try {
-    const response = await axios.get<DesksListResult>(`/desks`);
-    return response.data;
-  } catch (e) {
-    console.log(e);
-    return e;
-  }
+  const response = await axios.get<DesksListResult>(`/desks`);
+  return response.data;
 }
 
 export async function fetchDesk(id: number): Promise<DeskResult> {
-  try {
-    const response = await axios.get<DeskResult>(`/desks/${id}`);
-    console.log(response.data);
-    return response.data;
-  } catch (e) {
-    console.log(e.message);
-    return e;
+  const response = await axios.get<DeskResult>(`/desks/${id}`);
+  return response.data;
+}
+
+export async function postDesk(
+  title: string,
+  uri: string,
+  token: string
+): Promise<PostDeskResult> {
+  if (!token) {
+    throw Error("Not authorized");
   }
+  const response = await axios.post<PostDeskResult>(
+    "/desks",
+    { title, uri },
+    { headers: { authorization: `Bearer ${token}` } }
+  );
+  return response.data;
 }
 
 export async function signup(
@@ -53,33 +65,23 @@ export async function signup(
   email: string,
   password: string
 ): Promise<SignupResult> {
-  try {
-    const response = await axios.post<SignupResult>("/auth/signup", {
-      email,
-      password,
-      name,
-    });
-    return response.data;
-  } catch (e) {
-    console.log(e.message);
-    return e;
-  }
+  const response = await axios.post<SignupResult>("/auth/signup", {
+    email,
+    password,
+    name,
+  });
+  return response.data;
 }
 
 export async function login(
   email: string,
   password: string
 ): Promise<SignupResult> {
-  try {
-    const response = await axios.post("/auth/login", {
-      email,
-      password,
-    });
-    return response.data;
-  } catch (e) {
-    console.log(e.message);
-    return e;
-  }
+  const response = await axios.post("/auth/login", {
+    email,
+    password,
+  });
+  return response.data;
 }
 
 export function ApiQueryConfigProvider({

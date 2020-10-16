@@ -2,6 +2,7 @@ const { Router } = require("express");
 const bcrypt = require("bcrypt");
 const Developer = require("../models").developer;
 const { toJWT } = require("../auth/jwt");
+const authMiddleware = require("../auth/middleware");
 const router = Router();
 
 router.post("/login", async (req, res, next) => {
@@ -47,6 +48,11 @@ router.post("/signup", async (req, res, next) => {
   } catch (e) {
     next(e);
   }
+});
+
+router.get("/me", authMiddleware, async (req, res, next) => {
+  const { name, email } = req.user;
+  res.json({ name, email });
 });
 
 module.exports = router;

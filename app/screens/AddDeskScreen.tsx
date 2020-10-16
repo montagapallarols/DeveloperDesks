@@ -1,13 +1,28 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Image, Alert, View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  Image,
+  Alert,
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TextInput,
+  ScrollView,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
+import { useNavigation } from "@react-navigation/native";
 
 import { useAsyncCallback } from "app/lib/useAsyncCallback";
 import { HugeButton, Button, CameraIcon, GalleryIcon, theme } from "app/ui";
+import { postDesk } from "../lib/api";
+import { useAppState } from "app/lib/appstate";
 
 export function AddDeskScreen() {
   const [image, setImage] = useState<ImageInfo>();
+  const [title, setTitle] = useState("");
+  const { auth } = useAppState();
+  const navigation = useNavigation();
 
   useEffect(() => {
     (async () => {
@@ -44,8 +59,8 @@ export function AddDeskScreen() {
     }
   }, [setImage]);
 
-  const [startUpload, uploadState] = useAsyncCallback(async () => {
-    if (!image) return;
+  const [startUpload, { status, error }] = useAsyncCallback(async () => {
+    if (!image || !auth) return;
 
     const body = new FormData();
     body.append("upload_preset", "k8vaf22u");
@@ -56,24 +71,28 @@ export function AddDeskScreen() {
       name: Date.now() + ".jpg",
     } as any);
 
-    try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudname}/image/upload`,
-        {
-          method: "post",
-          body: body,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      const data = await res.json();
-      console.log(data);
-    } catch (err) {
-      console.error(err);
-      Alert.alert("Oh no! An error occurred...");
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudname}/image/upload`,
+      {
+        method: "post",
+        body: body,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    const { url } = await res.json();
+    const response = await postDesk(title, url, auth.token);
+    if (response.status === "success") {
+      Alert.alert("Success", "Thank you for sharing your desk! :D", [
+        { text: "Home", onPress: () => navigation.navigate("Home") },
+      ]);
     }
   });
+
+  if (error) {
+    Alert.alert("Oh no... Seems like something went wrong");
+  }
 
   const width = Dimensions.get("window").width - 2 * 16;
   const imageSizing = {
@@ -82,25 +101,25 @@ export function AddDeskScreen() {
   };
 
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen} contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.uploadButtonsRow}>
         <View style={{ flex: 1, padding: 8 }}>
           <HugeButton
-            text="Take a photo"
+            text='Take a photo'
             Icon={CameraIcon}
             onPress={launchCamera}
           />
         </View>
         <View style={{ flex: 1, padding: 8 }}>
           <HugeButton
-            text="Select from gallery"
+            text='Select from gallery'
             Icon={GalleryIcon}
             onPress={launchGallery}
           />
         </View>
       </View>
       {!image ? (
-        <View style={{ flex: 1 }} key="upload_todo">
+        <View style={{ flex: 1 }} key='upload_todo'>
           <View style={{ flex: 1 }} />
           <Text style={styles.emptyStateText}>
             Select a photo from your gallery, or take a photo, to continue.
@@ -108,17 +127,24 @@ export function AddDeskScreen() {
           <View style={{ flex: 1.6 }} />
         </View>
       ) : (
-        <View style={{ flex: 1 }} key="upload">
+        <View style={{ flex: 1 }} key='upload'>
           <Image source={{ uri: image.uri }} style={imageSizing} />
-          <View style={{ flex: 1 }} />
+          <View style={{ flex: 1 }}>
+            <TextInput
+              style={styles.formField}
+              value={title}
+              placeholder={"Desk Title"}
+              onChangeText={setTitle}
+            />
+          </View>
           <Button
-            disabled={uploadState.status === "loading"}
-            text="Upload this image!"
+            disabled={!title || status === "loading"}
+            text='Upload this image!'
             onPress={startUpload}
           />
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
@@ -140,5 +166,13 @@ const styles = StyleSheet.create({
     lineHeight: 1.35 * 16,
     color: theme.colors.muted,
     marginHorizontal: 16,
+  },
+  formField: {
+    height: 40,
+    borderColor: "gray",
+    backgroundColor: "white",
+    borderWidth: 1,
+    marginTop: 30,
+    paddingLeft: 10,
   },
 });

@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TextInput,
+  Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSetAppState } from "../lib/appstate";
@@ -40,23 +41,32 @@ export function LoginOrSignupScreen() {
 
   const onSignupPress = async () => {
     setLoading(true);
-    const { name, email, password } = signupState;
-    const data = await signup(name, email, password);
-    setState({
-      auth: { email: data.email, name: data.name, token: data.token },
-    });
-    navigation.navigate("Home");
+    try {
+      const { name, email, password } = signupState;
+      const data = await signup(name, email, password);
+      setState({
+        auth: { email: data.email, name: data.name, token: data.token },
+      });
+      navigation.navigate("Home");
+    } catch (e) {
+      Alert.alert("Oh no! An error occurred...");
+    }
     setLoading(false);
   };
 
   const onLoginPress = async () => {
     setLoading(true);
-    const { email, password } = loginState;
-    const data = await login(email, password);
-    setState({
-      auth: { email: data.email, name: data.name, token: data.token },
-    });
-    navigation.navigate("Home");
+    try {
+      const { email, password } = loginState;
+      const data = await login(email, password);
+      setState({
+        auth: { email: data.email, name: data.name, token: data.token },
+      });
+      navigation.navigate("Home");
+    } catch (e) {
+      Alert.alert("Oh no! An error occurred...");
+    }
+
     setLoading(false);
   };
 
@@ -93,7 +103,12 @@ export function LoginOrSignupScreen() {
         autoCapitalize={"none"}
         value={loginState.password}
       />
-      <Button style={styles.button} text={"Login"} onPress={onLoginPress} />
+      <Button
+        style={styles.button}
+        text={"Login"}
+        onPress={onLoginPress}
+        disabled={!loginState.email || !loginState.password}
+      />
       <View style={{ alignItems: "center" }}>
         <Text style={styles.separatorText}>----- or ------</Text>
       </View>
@@ -119,7 +134,14 @@ export function LoginOrSignupScreen() {
         onChangeText={t => changeSignUp("password", t)}
         value={signupState.password}
       />
-      <Button style={styles.button} onPress={onSignupPress} text={"Sign up"} />
+      <Button
+        style={styles.button}
+        onPress={onSignupPress}
+        text={"Sign up"}
+        disabled={
+          !signupState.email || !signupState.password || !signupState.name
+        }
+      />
     </ScrollView>
   );
 }

@@ -1,4 +1,4 @@
-const User = require("../models").user;
+const User = require("../models").developer;
 const { toData } = require("./jwt");
 
 async function auth(req, res, next) {
@@ -19,6 +19,7 @@ async function auth(req, res, next) {
       req.user = user;
       next();
     } catch (e) {
+      console.log(e.message);
       return res.status(401).send("Invalid token");
     }
   } else {
