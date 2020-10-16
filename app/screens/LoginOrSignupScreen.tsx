@@ -2,16 +2,13 @@ import React, { useState } from "react";
 import {
   ScrollView,
   View,
-  Image,
   Text,
   StyleSheet,
   ActivityIndicator,
-  Dimensions,
   TextInput,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSetAppState } from "../lib/appstate";
-import { useQuery } from "react-query";
 import { signup, login } from "../lib/api";
 
 import { theme, Button } from "app/ui";
@@ -21,6 +18,7 @@ export function LoginOrSignupScreen() {
   const insets = useSafeAreaInsets();
   const setState = useSetAppState();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
   const [loginState, setLoginState] = useState({
     email: "",
     password: "",
@@ -41,22 +39,41 @@ export function LoginOrSignupScreen() {
   };
 
   const onSignupPress = async () => {
+    setLoading(true);
     const { name, email, password } = signupState;
     const data = await signup(name, email, password);
     setState({
       auth: { email: data.email, name: data.name, token: data.token },
     });
     navigation.navigate("Home");
+    setLoading(false);
   };
 
   const onLoginPress = async () => {
+    setLoading(true);
     const { email, password } = loginState;
     const data = await login(email, password);
     setState({
       auth: { email: data.email, name: data.name, token: data.token },
     });
     navigation.navigate("Home");
+    setLoading(false);
   };
+
+  if (loading) {
+    return (
+      <View
+        style={[
+          styles.screen,
+          { paddingTop: insets.top + 16, alignItems: "center" },
+        ]}
+      >
+        <View style={{ flex: 1 }} />
+        <ActivityIndicator size='large' color={theme.colors.orange} />
+        <View style={{ flex: 1.6 }} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={[styles.screen, { paddingTop: insets.top + 16 }]}>
@@ -112,6 +129,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
     paddingHorizontal: 16,
+    display: "flex",
   },
   headerText: {
     fontFamily: "RobotoSlab_800ExtraBold",

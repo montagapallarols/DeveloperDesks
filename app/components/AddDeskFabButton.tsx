@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { transparentize } from "polished";
-
+import { useAppState } from "../lib/appstate";
 import { shadow, theme, PlusIcon } from "app/ui";
 
 type Props = {
@@ -11,13 +11,13 @@ type Props = {
 
 export function AddDeskFabButton(props: Props) {
   const navigation = useNavigation();
-  console.log(props);
+  const { auth } = useAppState();
+
   return (
     <Pressable
       style={styles.container}
       onPress={() => {
-        // navigation.navigate("AddDesk");
-        props.openDrawer();
+        auth ? navigation.navigate("AddDesk") : props.openDrawer();
       }}
     >
       <PlusIcon width={36} height={36} color='white' />
