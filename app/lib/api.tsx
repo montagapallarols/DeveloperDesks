@@ -7,6 +7,8 @@ import { useSetAppState } from "./appstate";
 export type DeskResult = {
   id: number;
   uri: string;
+  latitude: number;
+  longitude: number;
   developer: {
     id: number;
     name: string;
@@ -25,25 +27,25 @@ export type SignupResult = {
   token: string;
 };
 
-export function fetchDesksList(): Promise<DesksListResult> {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({ total: desksDummyData.length, results: desksDummyData });
-    }, Math.random() * 500);
-  });
+export async function fetchDesksList(): Promise<DesksListResult> {
+  try {
+    const response = await axios.get<DesksListResult>(`/desks`);
+    return response.data;
+  } catch (e) {
+    console.log(e);
+    return e;
+  }
 }
 
-export function fetchDesk(id: number): Promise<DeskResult> {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const desk = desksDummyData.find(r => r.id === id);
-      if (desk) {
-        resolve(desk);
-      } else {
-        reject("Desk does not exist");
-      }
-    }, Math.random() * 500);
-  });
+export async function fetchDesk(id: number): Promise<DeskResult> {
+  try {
+    const response = await axios.get<DeskResult>(`/desks/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (e) {
+    console.log(e.message);
+    return e;
+  }
 }
 
 export async function signup(
@@ -52,7 +54,7 @@ export async function signup(
   password: string
 ): Promise<SignupResult> {
   try {
-    const response = await axios.post("/auth/signup", {
+    const response = await axios.post<SignupResult>("/auth/signup", {
       email,
       password,
       name,
