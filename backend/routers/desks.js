@@ -42,14 +42,10 @@ router.post("/", authMiddleware, async (req, res, next) => {
       return res.status(400).send("Missing parameters");
     }
     await Desk.create({ uri, title, developerId: user.id });
-    res.send({ status: "Desk Created!" });
+    res.send({ status: "success" });
   } catch (e) {
     next(e);
   }
 });
 
 module.exports = router;
-
-// router.get("/", (req, res, next) => {});
-
-// router.get("/", (req, res, next) => {});

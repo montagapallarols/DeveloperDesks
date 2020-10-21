@@ -36,6 +36,12 @@ export function DesksList() {
     Alert.alert(`${error}`);
   }
 
+  let sortedList = list ? [...list.results ] : undefined;
+  if (filter === 0) {
+    sortedList?.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  }
+  
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.filters}>
@@ -65,7 +71,7 @@ export function DesksList() {
         refreshControl={
           <RefreshControl refreshing={isFetching} onRefresh={refetch} />
         }
-        data={list?.results}
+        data={sortedList}
         keyExtractor={desk => `${desk.id}`}
         renderItem={({ item: desk }) => <DeskItem desk={desk} />}
       />
