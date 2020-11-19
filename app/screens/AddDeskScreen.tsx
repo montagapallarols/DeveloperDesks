@@ -8,7 +8,9 @@ import {
   Dimensions,
   TextInput,
   ScrollView,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { ImageInfo } from "expo-image-picker/build/ImagePicker.types";
@@ -103,12 +105,12 @@ export function AddDeskScreen() {
 
   if (status === "loading") {
     return (
-    <View style={styles.screen}>
-      <View style={{ flex: 1 }} />
-        <ActivityIndicator size='large' color={theme.colors.orange} />
+      <View style={styles.screen}>
+        <View style={{ flex: 1 }} />
+        <ActivityIndicator size="large" color={theme.colors.orange} />
         <View style={{ flex: 1.6 }} />
-    </View>
-    )
+      </View>
+    );
   }
 
   return (
@@ -116,21 +118,21 @@ export function AddDeskScreen() {
       <View style={styles.uploadButtonsRow}>
         <View style={{ flex: 1, padding: 8 }}>
           <HugeButton
-            text='Take a photo'
+            text="Take a photo"
             Icon={CameraIcon}
             onPress={launchCamera}
           />
         </View>
         <View style={{ flex: 1, padding: 8 }}>
           <HugeButton
-            text='Select from gallery'
+            text="Select from gallery"
             Icon={GalleryIcon}
             onPress={launchGallery}
           />
         </View>
       </View>
       {!image ? (
-        <View style={{ flex: 1 }} key='upload_todo'>
+        <View style={{ flex: 1 }} key="upload_todo">
           <View style={{ flex: 1 }} />
           <Text style={styles.emptyStateText}>
             Select a photo from your gallery, or take a photo, to continue.
@@ -138,22 +140,28 @@ export function AddDeskScreen() {
           <View style={{ flex: 1.6 }} />
         </View>
       ) : (
-        <View style={{ flex: 1 }} key='upload'>
-          <Image source={{ uri: image.uri }} style={imageSizing} />
-          <View style={{ flex: 1 }}>
-            <TextInput
-              style={styles.formField}
-              value={title}
-              placeholder={"Desk Title"}
-              onChangeText={setTitle}
+        <KeyboardAvoidingView
+          behavior={Platform.OS == "ios" ? "position" : "height"}
+          // keyboardVerticalOffset={180}
+          style={{ flex: 0.6 }}
+        >
+          <View style={{ flex: 1 }} key="upload">
+            <Image source={{ uri: image.uri }} style={imageSizing} />
+            <View style={{ flex: 1 }}>
+              <TextInput
+                style={styles.formField}
+                value={title}
+                placeholder={"Desk Title"}
+                onChangeText={setTitle}
+              />
+            </View>
+            <Button
+              disabled={!title}
+              text="Upload this image!"
+              onPress={startUpload}
             />
           </View>
-          <Button
-            disabled={!title}
-            text='Upload this image!'
-            onPress={startUpload}
-          />
-        </View>
+        </KeyboardAvoidingView>
       )}
     </ScrollView>
   );
