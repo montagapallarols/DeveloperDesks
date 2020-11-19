@@ -142,7 +142,6 @@ export function AddDeskScreen() {
       ) : (
         <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "position" : "height"}
-          // keyboardVerticalOffset={180}
           style={{ flex: 0.6 }}
         >
           <View style={{ flex: 1 }} key="upload">
